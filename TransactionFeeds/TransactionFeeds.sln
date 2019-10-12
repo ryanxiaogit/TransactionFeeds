@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "TransactionFeeds\API.csproj", "{699CB0C6-6CA3-464B-8976-8185293BA0DF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{513311BA-1A93-4638-9E05-1632AC3EDFA7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{FD7D3F13-745C-4FF3-8A44-BA89C1C05260}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "infranstructure", "infranstructure\infranstructure.csproj", "{29548BF5-126E-45B2-A3E6-A05FA517E3BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "infranstructure", "infranstructure\infranstructure.csproj", "{29548BF5-126E-45B2-A3E6-A05FA517E3BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Abstracts", "Abstracts\Abstracts.csproj", "{54A40E01-5328-4695-8F91-4C7EC21559E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abstracts", "Abstracts\Abstracts.csproj", "{54A40E01-5328-4695-8F91-4C7EC21559E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{1CA08583-3828-47CF-9915-6A8A7B6771C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{699CB0C6-6CA3-464B-8976-8185293BA0DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{699CB0C6-6CA3-464B-8976-8185293BA0DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{699CB0C6-6CA3-464B-8976-8185293BA0DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{699CB0C6-6CA3-464B-8976-8185293BA0DF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{513311BA-1A93-4638-9E05-1632AC3EDFA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{513311BA-1A93-4638-9E05-1632AC3EDFA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{513311BA-1A93-4638-9E05-1632AC3EDFA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{54A40E01-5328-4695-8F91-4C7EC21559E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54A40E01-5328-4695-8F91-4C7EC21559E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54A40E01-5328-4695-8F91-4C7EC21559E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CA08583-3828-47CF-9915-6A8A7B6771C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CA08583-3828-47CF-9915-6A8A7B6771C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CA08583-3828-47CF-9915-6A8A7B6771C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CA08583-3828-47CF-9915-6A8A7B6771C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,3 +16,5 @@
 /TransactionFeeds/infranstructure/obj
 /TransactionFeeds/Tests/bin/Debug/netcoreapp2.1
 /TransactionFeeds/Tests/obj
+/TransactionFeeds/API/bin/Debug/netcoreapp2.1
+/TransactionFeeds/API/obj
