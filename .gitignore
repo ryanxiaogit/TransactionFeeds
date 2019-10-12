@@ -3,3 +3,16 @@
 ################################################################################
 
 /TransactionFeeds/DBRepository/obj
+*.suo
+/.vs
+/TransactionFeeds/.vs/TransactionFeeds
+/TransactionFeeds/Abstracts/bin/Debug/netcoreapp2.1
+/TransactionFeeds/Abstracts/obj/Debug/netcoreapp2.1
+/TransactionFeeds/Abstracts/obj
+/TransactionFeeds/Domain/bin/Debug/netcoreapp2.1
+/TransactionFeeds/Domain/obj
+*.user
+/TransactionFeeds/infranstructure/bin/Debug/netcoreapp2.1
+/TransactionFeeds/infranstructure/obj
+/TransactionFeeds/Tests/bin/Debug/netcoreapp2.1
+/TransactionFeeds/Tests/obj
