@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Abstracts;
+using System;
 
 namespace infranstructure
 {
-    public class EventSourcing
+    public class EventSourcing: IEventSouring
     {
     }
 }

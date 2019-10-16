@@ -2,7 +2,7 @@
 
 namespace Abstracts.ModelBase
 {
-    public abstract class TransactionModelBase
+    public class TransactionModel
     {
         public string TransactionIdentificator { get; set; }
         public decimal Amount { get; set; }

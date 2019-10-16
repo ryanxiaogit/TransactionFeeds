@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Abstracts;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace infranstructure
 {
-    class Repository
+    public class Repository: IRepository
     {
     }
 }
