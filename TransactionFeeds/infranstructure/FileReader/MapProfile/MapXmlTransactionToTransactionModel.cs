@@ -1,10 +1,10 @@
 ﻿using Abstracts.ModelBase;
-using API.Helper.FileReader.Dto;
 using AutoMapper;
+using infranstructure.FileReader.Dto;
 using System;
 using System.Globalization;
 
-namespace API.Helper.FileReader.MapProfile
+namespace infranstructure.FileReader.MapProfile
 {
     public class MapXmlTransactionToTransactionModel : Profile
     {
@@ -18,7 +18,7 @@ namespace API.Helper.FileReader.MapProfile
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => decimal.Parse(src.Details.Amount)))
                 .ForMember(dest => dest.CurrencyCode, opt => opt.MapFrom(src => src.Details.CurrencyCode))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status == "Approved" ? TransactionStatus.A :
-                                                                        src.Status == "Reject" ? TransactionStatus.R : 
+                                                                        src.Status == "Rejected" ? TransactionStatus.R :
                                                                         TransactionStatus.D))
                 .ForMember(dest => dest.TransactionDate, opt => opt.MapFrom(src =>
                 DateTime.ParseExact(src.TransactionDate, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)

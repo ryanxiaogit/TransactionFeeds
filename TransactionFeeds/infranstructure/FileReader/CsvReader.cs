@@ -7,7 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace API.Helper.FileReader
+namespace infranstructure.FileReader
 {
     public class CsvReader : FileReaderBase
     {
@@ -17,26 +17,37 @@ namespace API.Helper.FileReader
             _logger = logger;
         }
 
+        public override string FileType { get => "CSV"; }
+
         protected override object ActualHandle(object request)
         {
             List<TransactionModel> transactions = null;
 
             var fileReader = request as StreamReader;
-
+            fileReader.BaseStream.Position = 0;
+            fileReader.DiscardBufferedData();
             try
             {
                 var line = fileReader.ReadLine();
                 while (!string.IsNullOrEmpty(line))
                 {
-                    if (transactions == null)
+                    var readline = GetModel(line);
+                    if (readline != null)
                     {
-                        transactions = new List<TransactionModel>();
+                        if (transactions == null)
+                        {
+                            transactions = new List<TransactionModel>();
+                        }
+                        transactions.Add(readline);
+                        line = fileReader.ReadLine();
                     }
-                    transactions.Add(GetModel(line));
-
-                    line = fileReader.ReadLine();
+                    else
+                    {
+                        // when read invalid line, stop reading.
+                        line = string.Empty;
+                        _logger.Log(LogLevel.Information, "read invalid line, stop reading as csv file.");
+                    }
                 }
-                if (transactions != null && transactions.Count > 0) FileType = "CSV";
             }
             catch (CsvHelperException ex)
             {
@@ -65,6 +76,10 @@ namespace API.Helper.FileReader
                         : stringValues[4] == "Failed" ? TransactionStatus.R : TransactionStatus.D
                         //TODO: optimize this cast method
                     };
+                }
+                else
+                {
+                    _logger.Log(LogLevel.Information, $"Transform CSV error for the line {line}");
                 }
             }
             catch (Exception ex)

@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Abstracts\Abstracts.csproj" />
     <ProjectReference Include="..\API\API.csproj" />
+    <ProjectReference Include="..\infranstructure\infranstructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

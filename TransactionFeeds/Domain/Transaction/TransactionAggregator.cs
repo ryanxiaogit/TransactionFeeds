@@ -8,7 +8,7 @@ namespace Domain.Transaction
 {
     public class TransactionAggregator : ITransactionAggregator
     {
-
+        //TODO: merge Bussiness if required
         public async Task<bool> SaveTransactions(IList<TransactionModel> transactions)
         {
             throw new NotImplementedException();

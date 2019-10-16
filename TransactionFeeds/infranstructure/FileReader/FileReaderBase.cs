@@ -3,11 +3,11 @@ using Abstracts.ResponsibilityHandler;
 using System.Collections.Generic;
 using System.IO;
 
-namespace API.Helper.FileReader
+namespace infranstructure.FileReader
 {
     public abstract class FileReaderBase : BaseHandler
     {
-        public string FileType { get; protected set; }
+        public abstract string FileType { get; }
         public List<TransactionModel> ReadFile(StreamReader fileReader)
         {
             return Handle(fileReader) as List<TransactionModel>;

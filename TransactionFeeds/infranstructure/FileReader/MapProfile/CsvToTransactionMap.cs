@@ -1,7 +1,7 @@
 ﻿using Abstracts.ModelBase;
 using CsvHelper.Configuration;
 
-namespace API.Helper.FileReader.MapProfile
+namespace infranstructure.FileReader.MapProfile
 {
     public class CsvToTransactionMap : ClassMap<TransactionModel>
     {
@@ -10,7 +10,7 @@ namespace API.Helper.FileReader.MapProfile
             Map(t => t.Amount).TypeConverterOption.NumberStyles(
                 System.Globalization.NumberStyles.AllowDecimalPoint
                 | System.Globalization.NumberStyles.AllowThousands
-                | System.Globalization.NumberStyles.Float);            
+                | System.Globalization.NumberStyles.Float);
             Map(t => t.Amount).ConvertUsing(r => r.Amount.ToString().Replace(",", string.Empty) + "D")
                 .Validate(x => x.Length > 0);
             Map(t => t.CurrencyCode).Name("Currency Code").Validate(x => x.Length > 0);

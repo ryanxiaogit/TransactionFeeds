@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace API.Helper.FileReader.Dto
+namespace infranstructure.FileReader.Dto
 {
     [XmlRoot("Transaction")]
     public class XmlTransaction

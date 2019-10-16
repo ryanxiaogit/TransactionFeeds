@@ -1,7 +1,4 @@
 {
-  "ServiceSetting": {
-    "FileUploadPath": "FileStaging"
-  },
   "TransactionRepository": {
     "ConnectionString": "Server=localhost\\SQLEXPRESS;Database=TransactionFeed;Trusted_Connection=True;"
   }

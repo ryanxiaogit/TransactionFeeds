@@ -1,6 +1,6 @@
 ﻿using Abstracts.ModelBase;
-using API.Helper.FileReader;
-using API.Helper.FileReader.Dto;
+using infranstructure.FileReader;
+using infranstructure.FileReader.Dto;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Collections.Generic;
@@ -12,21 +12,32 @@ namespace Tests
 {
     public class FileReaderTest
     {
-        private CsvReader DefualtCsvReader
+        static CsvReader defaultCsvReader = null;
+        static XmlReader defaultXmlReader = null;
+
+        public static CsvReader DefualtCsvReader
         {
             get
             {
-                Mock<ILogger<CsvReader>> mockLogger = new Mock<ILogger<CsvReader>>();
-                return new CsvReader(mockLogger.Object);
+                if (defaultCsvReader == null)
+                {
+                    Mock<ILogger<CsvReader>> mockLogger = new Mock<ILogger<CsvReader>>();
+                    defaultCsvReader = new CsvReader(mockLogger.Object);
+                }
+                return defaultCsvReader;
             }
         }
 
-        private XmlReader DefualtXmlReader
+        public static XmlReader DefualtXmlReader
         {
             get
             {
-                Mock<ILogger<XmlReader>> mockLogger = new Mock<ILogger<XmlReader>>();
-                return new XmlReader(mockLogger.Object);
+                if (defaultXmlReader == null)
+                {
+                    Mock<ILogger<XmlReader>> mockLogger = new Mock<ILogger<XmlReader>>();
+                    defaultXmlReader = new XmlReader(mockLogger.Object);
+                }
+                return defaultXmlReader;
             }
         }
 

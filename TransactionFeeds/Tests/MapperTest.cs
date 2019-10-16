@@ -1,7 +1,7 @@
 ﻿using Abstracts.ModelBase;
-using API.Helper.FileReader.Dto;
-using API.Helper.FileReader.MapProfile;
 using AutoMapper;
+using infranstructure.FileReader.Dto;
+using infranstructure.FileReader.MapProfile;
 using System;
 using Xunit;
 

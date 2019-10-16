@@ -2,12 +2,12 @@
 using Abstracts.ModelBase;
 using API.Filters;
 using API.Options;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -20,38 +20,34 @@ namespace API.Controllers
     {
         private ITransactionAggregator _transactionAggregator;
         private ILogger<TransactionController> _logger;
-        private IMapper _mapper;
         private IOptions<ServiceSetting> _optionsServiceSetting;
         private IFileStaging _fileStaging;
-        //private IFileReader _fileTypeValidation;
+        private readonly IRepository _repository;
+
 
         public TransactionController(
             ITransactionAggregator transactionAggregator,
             ILogger<TransactionController> logger,
-            IMapper mapper,
             IOptions<ServiceSetting> optionsServiceSetting,
-            IFileStaging fileStaging
-            //IFileReader fileTypeValidation
+            IFileStaging fileStaging,
+            IRepository repository
             )
         {
             _transactionAggregator = transactionAggregator;
             _logger = logger;
-            _mapper = mapper;
             _optionsServiceSetting = optionsServiceSetting;
             _fileStaging = fileStaging;
-            //_fileTypeValidation = fileTypeValidation;
+            _repository = repository;
         }
 
         public void LoadDependency(
             ITransactionAggregator transactionAggregator = null,
             ILogger<TransactionController> logger = null,
-            IMapper mapper = null,
             IOptions<ServiceSetting> optionsServiceSetting = null,
             IFileStaging fileStaging = null)
         {
             _transactionAggregator = transactionAggregator ?? _transactionAggregator;
             _logger = logger ?? _logger;
-            _mapper = mapper ?? _mapper;
             _optionsServiceSetting = optionsServiceSetting ?? _optionsServiceSetting;
             _fileStaging = fileStaging ?? _fileStaging;
         }
@@ -67,20 +63,15 @@ namespace API.Controllers
             var fileStream = HttpContext?.Request.Body;
             await Task.Yield();
 
-            var extensionName = string.Empty;
+            //var readerChain =
 
-            List<TransactionModel> transactions = null;
-            //if (_fileTypeValidation.ReadFile(new StreamReader(fileStream), out var transactions))
-            //    extensionName = "csv";
-            //else if (_fileTypeValidation.ValidateXmlFile(new StreamReader(fileStream), out transactions))
-            //    extensionName = "xml";
+            List < TransactionModel > transactions = null;
 
-            if (transactions != null
-                && !string.IsNullOrEmpty(extensionName))
+            if (transactions != null)
             {
                 var targetFilePath = Path.Combine(AppContext.BaseDirectory,
                     _optionsServiceSetting.Value.FileUploadPath,
-                    $"{DateTime.Now.ToString()}.{extensionName}");
+                    $"{DateTime.Now.ToString()}.txt");
 
                 if (await _fileStaging.StagingFile(requestID, fileStream, targetFilePath))
                 {
@@ -100,20 +91,44 @@ namespace API.Controllers
         public async Task<IActionResult> SearchTransations(
             string currency)
         {
-            await Task.Yield();
-
-            return Ok(new List<QueryResponse>());
+            IList<QueryResponse> list = null;
+            try
+            {
+                list = await SearchTransactions(new QueryRequest { Currency = currency });
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Critical, ex.Message);
+                return StatusCode(500);
+            }
+            return Ok(list);
         }
 
         //transactions/timerange/20190101150310_20190102010000     
         [Route("transactions/timerange/{startDate}_{endDate}")]
         public async Task<IActionResult> SearchTransations(
-            int startdate,
-            int enddate)
+            long startdate,
+            long enddate)
         {
-            await Task.Yield();
-
-            return Ok(new List<QueryResponse>());
+            IList<QueryResponse> list = null;
+            try
+            {
+                list = await SearchTransactions(new QueryRequest
+                {
+                    StartDate = DateTime.ParseExact(startdate.ToString(),
+                                                    "yyyyMMddhhmmss",
+                                                     CultureInfo.InvariantCulture),
+                    EndDate = DateTime.ParseExact(enddate.ToString(),
+                                                    "yyyyMMddhhmmss",
+                                                     CultureInfo.InvariantCulture),
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Critical, ex.Message);
+                return StatusCode(500);
+            }
+            return Ok(list);
         }
 
         //transactions/status/A        
@@ -121,17 +136,27 @@ namespace API.Controllers
         public async Task<IActionResult> SearchTransations(
             TransactionStatus status)
         {
-            await Task.Yield();
-
-            return Ok(new List<QueryResponse>());
+            IList<QueryResponse> list = null;
+            try
+            {
+                list = await SearchTransactions(new QueryRequest
+                {
+                    Status = status
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Critical, ex.Message);
+                return StatusCode(500);
+            }
+            return Ok(list);
         }
 
 
         private async Task<IList<QueryResponse>> SearchTransactions(QueryRequest query)
         {
-            await Task.Yield();
-
-            return new List<QueryResponse>();
+            var list = await _repository.GetTransactions(query);
+            return list;
         }
     }
 }

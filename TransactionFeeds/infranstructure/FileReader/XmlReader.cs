@@ -1,19 +1,22 @@
 ﻿using Abstracts.ModelBase;
-using API.Helper.FileReader.Dto;
-using API.Helper.FileReader.MapProfile;
 using AutoMapper;
+using infranstructure.FileReader.Dto;
+using infranstructure.FileReader.MapProfile;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace API.Helper.FileReader
+namespace infranstructure.FileReader
 {
     public class XmlReader : FileReaderBase
     {
         private readonly ILogger<XmlReader> _logger;
         private readonly IMapper _mapper;
+
+        public override string FileType { get => "XML"; }
+
         public XmlReader(ILogger<XmlReader> logger)
         {
             _logger = logger;
@@ -28,6 +31,9 @@ namespace API.Helper.FileReader
             List<TransactionModel> finalTrans = null;
             XmlTransactions transactions = null;
             var fileReader = request as StreamReader;
+            fileReader.BaseStream.Position = 0;
+            fileReader.DiscardBufferedData();
+
             try
             {
                 var xsSubmit = new XmlSerializer(typeof(XmlTransactions));
@@ -36,8 +42,8 @@ namespace API.Helper.FileReader
                 {
                     finalTrans = _mapper.Map<List<TransactionModel>>(transactions.Trnasactions);
                 }
-                if (finalTrans != null && finalTrans.Count > 0) FileType = "XML";
             }
+
             catch (XmlException ex)
             {
                 _logger.Log(LogLevel.Error, ex.Message);

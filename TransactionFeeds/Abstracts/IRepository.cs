@@ -7,6 +7,6 @@ namespace Abstracts
     public interface IRepository
     {
         Task Save(List<TransactionModel> transactions);
-        Task<List<TransactionModel>> GetTransactions(TransactionModel targetModel);
+        Task<List<QueryResponse>> GetTransactions(QueryRequest targetModel);
     }
 }
