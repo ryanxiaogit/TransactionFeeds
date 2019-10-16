@@ -1,4 +1,5 @@
-﻿using Abstracts.ModelBase;
+﻿using Abstracts.FileReader;
+using Abstracts.ModelBase;
 using AutoMapper;
 using infranstructure.FileReader.Dto;
 using infranstructure.FileReader.MapProfile;
@@ -10,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace infranstructure.FileReader
 {
-    public class XmlReader : FileReaderBase
+    public class XmlReader : FileReaderBase, IXmlReader
     {
         private readonly ILogger<XmlReader> _logger;
         private readonly IMapper _mapper;

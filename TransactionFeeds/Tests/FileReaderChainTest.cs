@@ -9,7 +9,7 @@ namespace Tests
     {
         static FileReaderChain defaultChain = null;
 
-        public FileReaderChain DefaultFileReaderChian
+        public static FileReaderChain DefaultFileReaderChian
         {
             get
             {

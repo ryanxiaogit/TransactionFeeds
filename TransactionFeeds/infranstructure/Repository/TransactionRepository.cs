@@ -1,6 +1,7 @@
 ﻿using Abstracts;
 using Abstracts.ModelBase;
 using Dapper;
+using FastMember;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -49,7 +50,7 @@ namespace infranstructure.Repository
             if (queryParams.Length > 0)
                 queryParams.Remove(queryParams.Length - 5, 5);//remove the 'and' in the end
 
-            var whereQuery = "where "+ queryParams.ToString();
+            var whereQuery = "where " + queryParams.ToString();
 
             using (var connection = new SqlConnection(_conntectionString))
             {
@@ -67,14 +68,63 @@ namespace infranstructure.Repository
             return items;
         }
 
-        public Task Save(List<TransactionModel> transactions)
+        public async Task Save(List<TransactionModel> transactions)
         {
-            //using (var connection = new SqlConnection(_conntectionString))
-            //{
-            //    connection.Open();
+            int affectdRecords = 0;
 
-            //}
-            return null;
+            using (var connection = new SqlConnection(_conntectionString))
+            {
+                SqlTransaction trans = null;
+
+                try
+                {
+                    connection.Open();
+                    trans = connection.BeginTransaction();
+                    int chunkSize = 500;
+
+                    var chunks = transactions.Select((x, j) => new { index = 1, value = x })
+                                               .GroupBy(x => x.index / chunkSize)
+                                               .Select(x => x.Select(v => v.value).ToList())
+                                               .ToList();
+                    foreach (var chunk in chunks)
+                    {
+
+                        using (var sqlCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, trans)
+                        {
+                            DestinationTableName = "[dbo].[TRANSACTION]",
+                            BatchSize = chunk.Count,
+                            NotifyAfter = chunk.Count
+                        })
+                        {
+                            sqlCopy.SqlRowsCopied += (sender, args) => { affectdRecords += (int)args.RowsCopied; };
+                            sqlCopy.ColumnMappings.Add("TransactionIdentificator", "TransactionIdentificator");
+                            sqlCopy.ColumnMappings.Add("Amount", "Amount");
+                            sqlCopy.ColumnMappings.Add("CurrencyCode", "CurrencyCode");
+                            sqlCopy.ColumnMappings.Add("TransactionDate", "TransactionDate");
+                            sqlCopy.ColumnMappings.Add("Status", "TransactionStatus");
+
+                            var reader = ObjectReader.Create(chunk);
+                            {
+                                await sqlCopy.WriteToServerAsync(reader);
+                            }
+                        }
+                    }
+
+                    trans.Commit();
+                }
+                catch (Exception ex)
+                {
+                    trans?.Rollback();
+                    trans?.Dispose();
+                    _logger.Log(LogLevel.Error, ex.Message);
+                }
+                finally
+                {
+                    trans?.Dispose();
+                }
+            }
+
+            _logger.Log(LogLevel.Information, $"Inserted Transactions: {affectdRecords} records");
         }
     }
 }

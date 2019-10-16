@@ -20,7 +20,7 @@ namespace Tests
             var xmlTransaction = new XmlTransaction
             {
                 TransactionID = "TestID",
-                Status = "Reject",
+                Status = "Rejected",
                 TransactionDate = "2019-01-24T16:09:15",
                 Details = new XmlTransaction.PaymentDetails
                 {

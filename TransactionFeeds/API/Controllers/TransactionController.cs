@@ -1,6 +1,6 @@
 ﻿using Abstracts;
+using Abstracts.FileReader;
 using Abstracts.ModelBase;
-using API.Filters;
 using API.Options;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,41 +15,34 @@ namespace API.Controllers
 {
 
     [ApiController]
-    [ServiceFilter(typeof(RequestValidation))]
+    //[ServiceFilter(typeof(RequestValidation))]
     public class TransactionController : ControllerBase
     {
-        private ITransactionAggregator _transactionAggregator;
+        //private ITransactionAggregator _transactionAggregator;
         private ILogger<TransactionController> _logger;
         private IOptions<ServiceSetting> _optionsServiceSetting;
         private IFileStaging _fileStaging;
         private readonly IRepository _repository;
+        IFileReaderChain _fileReaderChain;
+
+
 
 
         public TransactionController(
-            ITransactionAggregator transactionAggregator,
+            //ITransactionAggregator transactionAggregator,
             ILogger<TransactionController> logger,
             IOptions<ServiceSetting> optionsServiceSetting,
             IFileStaging fileStaging,
-            IRepository repository
+            IRepository repository,
+            IFileReaderChain fileReaderChain
             )
         {
-            _transactionAggregator = transactionAggregator;
+            //_transactionAggregator = transactionAggregator;
             _logger = logger;
             _optionsServiceSetting = optionsServiceSetting;
             _fileStaging = fileStaging;
             _repository = repository;
-        }
-
-        public void LoadDependency(
-            ITransactionAggregator transactionAggregator = null,
-            ILogger<TransactionController> logger = null,
-            IOptions<ServiceSetting> optionsServiceSetting = null,
-            IFileStaging fileStaging = null)
-        {
-            _transactionAggregator = transactionAggregator ?? _transactionAggregator;
-            _logger = logger ?? _logger;
-            _optionsServiceSetting = optionsServiceSetting ?? _optionsServiceSetting;
-            _fileStaging = fileStaging ?? _fileStaging;
+            _fileReaderChain = fileReaderChain;
         }
 
         //transactions
@@ -57,32 +50,34 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFeed()
         {
-            var processSuccessfully = true;
-
-            var requestID = Guid.NewGuid().ToString();
-            var fileStream = HttpContext?.Request.Body;
-            await Task.Yield();
-
-            //var readerChain =
-
-            List < TransactionModel > transactions = null;
-
-            if (transactions != null)
+            try
             {
+                var requestID = Guid.NewGuid().ToString();
+                Stream fileStream = HttpContext?.Request.Body;
+
                 var targetFilePath = Path.Combine(AppContext.BaseDirectory,
-                    _optionsServiceSetting.Value.FileUploadPath,
-                    $"{DateTime.Now.ToString()}.txt");
+                                                _optionsServiceSetting.Value.FileUploadPath,
+                                                $"{DateTime.Now.Ticks}.txt");
+                Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, _optionsServiceSetting.Value.FileUploadPath));
 
                 if (await _fileStaging.StagingFile(requestID, fileStream, targetFilePath))
                 {
-                    processSuccessfully &= await _transactionAggregator.SaveTransactions(transactions);
+                    var transactions = _fileReaderChain.ReadFile(new StreamReader(targetFilePath));
+                    await _repository.Save(transactions);
+
+                    if (transactions == null)
+                    {
+                        return BadRequest();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Critical, ex.Message);
+                return StatusCode(500);
+            }
 
-            if (processSuccessfully)
-                return Ok();
-            else
-                return BadRequest();
+            return Ok();
         }
 
 

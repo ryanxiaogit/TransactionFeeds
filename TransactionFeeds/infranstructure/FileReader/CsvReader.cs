@@ -1,4 +1,5 @@
-﻿using Abstracts.ModelBase;
+﻿using Abstracts.FileReader;
+using Abstracts.ModelBase;
 using CsvHelper;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace infranstructure.FileReader
 {
-    public class CsvReader : FileReaderBase
+    public class CsvReader : FileReaderBase, ICsvReader
     {
         readonly ILogger<CsvReader> _logger;
         public CsvReader(ILogger<CsvReader> logger)

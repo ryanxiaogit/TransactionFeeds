@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Abstracts;
+using Abstracts.FileReader;
+using API.Options;
+using infranstructure;
+using infranstructure.FileReader;
+using infranstructure.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace API
 {
@@ -24,6 +24,18 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ServiceSetting>(Configuration.GetSection("ServiceSetting"));
+            services.Configure<TransactionRepositoryOptions>(Configuration.GetSection("TransactionRepository"));
+
+            services.AddSingleton(Configuration);
+
+            services.AddScoped<IFileReaderChain, FileReaderChain>();
+            services.AddScoped<IFileStaging, FileStaging>();
+            services.AddScoped<IRepository, TransactionRepository>();
+
+            services.AddScoped<ICsvReader, CsvReader>();
+            services.AddScoped<IXmlReader, XmlReader>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
