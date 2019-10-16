@@ -51,15 +51,15 @@ namespace Tests
         public void ReadXmlShouldbeOk()
         {
             var xmlReader = new StreamReader("./TestData/FileReader/Transactions_xml_20191013.xml");
-            var transactions = DefualtXmlReader.Handle(xmlReader) as XmlTransactions;
+            var transactions = DefualtXmlReader.Handle(xmlReader) as List<TransactionModel>;
 
             Assert.NotNull(transactions);
-            Assert.Equal(2, transactions.Trnasactions.Count);
+            Assert.Equal(2, transactions.Count);
 
-            Assert.Equal("200.00", transactions.Trnasactions[0].Details.Amount);
-            Assert.Equal("USD", transactions.Trnasactions[0].Details.CurrencyCode);
-            Assert.Equal("2019-01-23T13:45:10", transactions.Trnasactions[0].TransactionDate.ToString());
-            Assert.Equal("Done", transactions.Trnasactions[0].Status);
+            Assert.Equal(200.00m, transactions[0].Amount);
+            Assert.Equal("USD", transactions[0].CurrencyCode);
+            Assert.Equal("1/23/2019 1:45:10 PM", transactions[0].TransactionDate.ToString());
+            Assert.Equal(TransactionStatus.D, transactions[0].Status);
         }
 
         [Fact]

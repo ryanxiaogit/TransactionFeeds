@@ -116,7 +116,7 @@ namespace API.Controllers
             return Ok(new List<QueryResponse>());
         }
 
-        //transactions/currency/usd/timerange/20190101150310_20190102010000/status/A        
+        //transactions/status/A        
         [Route("transactions/status/{status}")]
         public async Task<IActionResult> SearchTransations(
             TransactionStatus status)

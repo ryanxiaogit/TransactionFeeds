@@ -7,9 +7,10 @@ namespace API.Helper.FileReader
 {
     public abstract class FileReaderBase : BaseHandler
     {
+        public string FileType { get; protected set; }
         public List<TransactionModel> ReadFile(StreamReader fileReader)
         {
-            return ImplementHandle(fileReader) as List<TransactionModel>;
+            return Handle(fileReader) as List<TransactionModel>;
         }
     }
 }

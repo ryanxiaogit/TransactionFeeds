@@ -11,11 +11,11 @@
             return handler;
         }
 
-        protected abstract object ImplementHandle(object request);
+        protected abstract object ActualHandle(object request);
 
         public object Handle(object request)
         {
-            var result = ImplementHandle(request);
+            var result = ActualHandle(request);
             if (result == null)
             {
                 if (this._nextHandler != null)

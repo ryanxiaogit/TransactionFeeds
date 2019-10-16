@@ -17,7 +17,7 @@ namespace API.Helper.FileReader
             _logger = logger;
         }
 
-        protected override object ImplementHandle(object request)
+        protected override object ActualHandle(object request)
         {
             List<TransactionModel> transactions = null;
 
@@ -36,6 +36,7 @@ namespace API.Helper.FileReader
 
                     line = fileReader.ReadLine();
                 }
+                if (transactions != null && transactions.Count > 0) FileType = "CSV";
             }
             catch (CsvHelperException ex)
             {
