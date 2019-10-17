@@ -11,7 +11,7 @@ CREATE TABLE [dbo].[Transaction](
 	[Amount] [numeric](18, 5) NULL,
 	[CurrencyCode] [varchar](3) NULL,
 	[TransactionDate] [datetime] NULL,
-	[TransactionStatus] [varchar](10) NULL,
+	[TransactionStatus] [int] NULL,
  CONSTRAINT [PK_Transaction] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
